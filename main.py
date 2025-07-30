@@ -2,16 +2,16 @@ import time
 import threading
 import requests
 from bs4 import BeautifulSoup
-from telegram import Bot
+import telebot
 from flask import Flask
 
 app = Flask(__name__)
 
-bot_token = 'توكن البوت هون بين علامات التنصيص'
+bot_token = 'توكن البوت هنا'
 chat_id = 1639846336
 target_word = 'Elder Strawberry'
 
-bot = Bot(token=bot_token)
+bot = telebot.TeleBot(bot_token)
 seen_items = set()
 
 def check_website():
@@ -25,7 +25,7 @@ def check_website():
         if name_elem and target_word.lower() in name_elem.text.lower():
             if name_elem.text not in seen_items:
                 seen_items.add(name_elem.text)
-                bot.send_message(chat_id=chat_id, text=f"🌱 ظهرت النبتة: {name_elem.text}!\n{url}")
+                bot.send_message(chat_id, f"🌱 ظهرت النبتة: {name_elem.text}!\n{url}")
 
 def run_checker():
     while True:
@@ -41,5 +41,6 @@ def home():
 
 if __name__ == '__main__':
     threading.Thread(target=run_checker).start()
+    import os
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
