@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 bot_token = '8338398375:AAEkYrjh8ynQkjRtNsXhHR9KSP9mEVw2-Tw'
 chat_id = 1639846336
-target_word = 'Strawberry'
+target_word = "strawberry"
 
 bot = telebot.TeleBot(bot_token)
 seen_items = set()
@@ -24,16 +24,17 @@ def check_website():
     print(f"عدد العناصر التي تم العثور عليها: {len(items)}")
 
     for item in items:
-        name_elem = item.find('span')
-        if name_elem:
-            plant_name = name_elem.get_text(strip=True)
-            print(f"تم العثور على: {plant_name}")
+    name_elem = item.find('span')
+    if name_elem:
+        plant_name = name_elem.get_text(strip=True)
+        print(f"تم العثور على: {plant_name}")
 
-            if target_word.lower() in plant_name.lower():
-                if plant_name not in seen_items:
-                    seen_items.add(plant_name)
-                    bot.send_message(chat_id, f"🌱 ظهرت النبتة: {plant_name}!\n{url}")
-                    print("🚀 تم إرسال رسالة إلى تيليغرام")
+        if target_word.lower() in plant_name.lower():
+            if plant_name not in seen_items:
+                seen_items.add(plant_name)
+                bot.send_message(chat_id, f"🌱 ظهرت النبتة: {plant_name}!\n{url}")
+                print("🚀 تم إرسال رسالة إلى تيليغرام")
+
 
 
 
