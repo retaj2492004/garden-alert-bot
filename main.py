@@ -24,8 +24,8 @@ def check_website():
     print(f"عدد العناصر التي تم العثور عليها: {len(items)}")
 
     for item in items:
-    name_elem = item.find('span')
-    if name_elem:
+     name_elem = item.find('span')
+     if name_elem:
         plant_name = name_elem.get_text(strip=True)
         print(f"تم العثور على: {plant_name}")
 
@@ -34,6 +34,7 @@ def check_website():
                 seen_items.add(plant_name)
                 bot.send_message(chat_id, f"🌱 ظهرت النبتة: {plant_name}!\n{url}")
                 print("🚀 تم إرسال رسالة إلى تيليغرام")
+
 
 
 
