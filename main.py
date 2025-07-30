@@ -20,11 +20,19 @@ def check_website():
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     items = soup.find_all('div', class_='item-card')
+    print(f"تم العثور على {len(items)} عناصر في الصفحة")
 
     for item in items:
         name_elem = item.find('h2')
-        if name_elem and target_word.lower() in name_elem.text.lower():
-            bot.send_message(chat_id, f"🌱 النبتة موجودة: {name_elem.text}!\n{url}")
+        if name_elem:
+            print("وجدت نبتة:", name_elem.text)
+            if target_word.lower() in name_elem.text.lower():
+                print("النبتة المطلوبة موجودة!")
+                if name_elem.text not in seen_items:
+                    seen_items.add(name_elem.text)
+                    bot.send_message(chat_id, f"🌱 ظهرت النبتة: {name_elem.text}!\n{url}")
+                    print("تم إرسال رسالة تليغرام")
+
 
 
 def run_checker():
