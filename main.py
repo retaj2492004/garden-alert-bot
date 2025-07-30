@@ -24,9 +24,8 @@ def check_website():
     for item in items:
         name_elem = item.find('h2')
         if name_elem and target_word.lower() in name_elem.text.lower():
-            if name_elem.text not in seen_items:
-                seen_items.add(name_elem.text)
-                bot.send_message(chat_id, f"🌱 ظهرت النبتة: {name_elem.text}!\n{url}")
+            bot.send_message(chat_id, f"🌱 النبتة موجودة: {name_elem.text}!\n{url}")
+
 
 def run_checker():
     while True:
