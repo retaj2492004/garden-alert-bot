@@ -8,8 +8,8 @@ import os
 
 app = Flask(__name__)
 
-bot_token = os.getenv('8338398375:AAEkYrjh8ynQkjRtNsXhHR9KSP9mEVw2-Tw')  # حط توكن بوت تيليغرام في متغير بيئة BOT_TOKEN
-chat_id = int(os.getenv('1639846336'))  # رقم الشات في متغير CHAT_ID (رقم فقط)
+bot_token = os.getenv('BOT_TOKEN')  # حط توكن بوت تيليغرام في متغير بيئة BOT_TOKEN
+chat_id = int(os.getenv('CHAT_ID'))  # رقم الشات في متغير CHAT_ID (رقم فقط)
 target_plant = "Strawberry"  # الكلمة المستهدفة
 
 bot = telebot.TeleBot(bot_token)
