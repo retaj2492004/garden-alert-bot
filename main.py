@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 
-bot_token = 'توكن البوت هنا'
+bot_token = '8338398375:AAEkYrjh8ynQkjRtNsXhHR9KSP9mEVw2-Tw'
 chat_id = 1639846336
 target_word = 'Elder Strawberry'
 
