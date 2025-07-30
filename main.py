@@ -1,0 +1,44 @@
+import time
+import threading
+import requests
+from bs4 import BeautifulSoup
+from telegram import Bot
+from flask import Flask
+
+app = Flask(__name__)
+
+bot_token = 'توكن البوت هون بين علامات التنصيص'
+chat_id = 1639846336
+target_word = 'Elder Strawberry'
+
+bot = Bot(token=bot_token)
+seen_items = set()
+
+def check_website():
+    url = 'https://vulcanvalues.com/grow-a-garden/stock'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    items = soup.find_all('div', class_='item-card')
+
+    for item in items:
+        name_elem = item.find('h2')
+        if name_elem and target_word.lower() in name_elem.text.lower():
+            if name_elem.text not in seen_items:
+                seen_items.add(name_elem.text)
+                bot.send_message(chat_id=chat_id, text=f"🌱 ظهرت النبتة: {name_elem.text}!\n{url}")
+
+def run_checker():
+    while True:
+        try:
+            check_website()
+        except Exception as e:
+            print("خطأ:", e)
+        time.sleep(60)
+
+@app.route('/')
+def home():
+    return "البوت شغال ✔️"
+
+if __name__ == '__main__':
+    threading.Thread(target=run_checker).start()
+    app.run(host='0.0.0.0', port=8080)
