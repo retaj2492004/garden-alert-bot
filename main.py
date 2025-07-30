@@ -19,19 +19,22 @@ def check_website():
     url = 'https://vulcanvalues.com/grow-a-garden/stock'
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    items = soup.find_all('div', class_='item-card')
-    print(f"تم العثور على {len(items)} عناصر في الصفحة")
+    items = soup.find_all('li', class_='bg-gray-900 p-3 rounded-md border border-gray-700 text-white font-medium flex items-center space-x-3')
+    
+    print(f"عدد العناصر التي تم العثور عليها: {len(items)}")
 
     for item in items:
-        name_elem = item.find('h2')
+        name_elem = item.find('span')
         if name_elem:
-            print("وجدت نبتة:", name_elem.text)
-            if target_word.lower() in name_elem.text.lower():
-                print("النبتة المطلوبة موجودة!")
-                if name_elem.text not in seen_items:
-                    seen_items.add(name_elem.text)
-                    bot.send_message(chat_id, f"🌱 ظهرت النبتة: {name_elem.text}!\n{url}")
-                    print("تم إرسال رسالة تليغرام")
+            plant_name = name_elem.get_text(strip=True)
+            print(f"تم العثور على: {plant_name}")
+
+            if target_word.lower() in plant_name.lower():
+                if plant_name not in seen_items:
+                    seen_items.add(plant_name)
+                    bot.send_message(chat_id, f"🌱 ظهرت النبتة: {plant_name}!\n{url}")
+                    print("🚀 تم إرسال رسالة إلى تيليغرام")
+
 
 
 
