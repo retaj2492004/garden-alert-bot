@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import telebot
 from flask import Flask
+import os
 
 app = Flask(__name__)
 
@@ -41,6 +42,5 @@ def home():
 
 if __name__ == '__main__':
     threading.Thread(target=run_checker).start()
-    import os
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
