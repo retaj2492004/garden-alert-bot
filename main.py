@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 bot_token = '8338398375:AAEkYrjh8ynQkjRtNsXhHR9KSP9mEVw2-Tw'
 chat_id = 1639846336
-target_word = 'Elder Strawberry'
+target_word = 'Strawberry'
 
 bot = telebot.TeleBot(bot_token)
 seen_items = set()
