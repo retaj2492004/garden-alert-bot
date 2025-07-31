@@ -1,4 +1,4 @@
 flask
 pyTelegramBotAPI
-beautifulsoup4
-requests
+selenium
+chromedriver-autoinstaller
