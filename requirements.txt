@@ -2,4 +2,3 @@ flask
 pyTelegramBotAPI
 beautifulsoup4
 requests
-apt-get update && apt-get install -y chromium-driver
