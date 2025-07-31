@@ -2,14 +2,11 @@ services:
   - type: web
     name: garden-alert-bot
     env: python
-    buildScript:
-      - apt-get update
-      - apt-get install -y chromium-browser chromium-driver
-      - pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt
     startCommand: python main.py
     envVars:
       - key: BOT_TOKEN
-        value: "8338398375:AAEkYrjh8ynQkjRtNsXhHR9KSP9mEVw2-Tw"
+        value: "توكن_البوت"
       - key: CHAT_ID
-        value: "1639846336"
+        value: "123456789"
     plan: free
