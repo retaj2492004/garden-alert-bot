@@ -1,4 +1,4 @@
 flask
-pyTelegramBotAPI
+telebot
 selenium
-chromedriver-autoinstaller
+webdriver-manager
