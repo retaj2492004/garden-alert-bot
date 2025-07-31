@@ -1,58 +1,60 @@
+import time
+import threading
 import requests
 from bs4 import BeautifulSoup
-import time
 import telebot
-import threading
 from flask import Flask
 import os
 
+# إعداد Flask
 app = Flask(__name__)
 
-bot_token = os.getenv('BOT_TOKEN')  # حط توكن بوت تيليغرام في متغير بيئة BOT_TOKEN
-chat_id = int(os.getenv('CHAT_ID'))  # رقم الشات في متغير CHAT_ID (رقم فقط)
-target_plant = "Strawberry"  # الكلمة المستهدفة
-
+# إعدادات البوت
+bot_token = os.getenv("BOT_TOKEN")  # ضع التوكن كمتغير بيئي في Render
+chat_id = int(os.getenv("CHAT_ID"))  # ضع رقم الشات كمتغير بيئي في Render
 bot = telebot.TeleBot(bot_token)
-seen_plants = set()
 
+# الكلمة المستهدفة
+TARGET = "strawberry"
+
+# لحفظ النباتات التي أُرسلت سابقاً
+seen_items = set()
+
+# رابط الموقع
+URL = "https://arcaiuz.com/grow-a-garden-stock"
+
+# الدالة التي تفحص الموقع
 def check_website():
-    url = 'https://www.gamersberg.com/grow-a-garden/stock'
-    headers = {
-        'User-Agent': 'Mozilla/5.0'
-    }
+    try:
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(URL, headers=headers, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+        items = soup.find_all("li", class_="bg-gray-900 p-3 rounded-md border border-gray-700 text-white font-medium flex items-center space-x-3")
 
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'html.parser')
+        for item in items:
+            span = item.find("span")
+            if span:
+                plant_name = span.get_text(strip=True).lower()
+                if TARGET in plant_name and plant_name not in seen_items:
+                    seen_items.add(plant_name)
+                    bot.send_message(chat_id, f"🌱 ظهرت النبتة: {plant_name.capitalize()}!\n{URL}")
+                    print(f"✅ تم إرسال: {plant_name}")
+    except Exception as e:
+        print(f"🚨 خطأ في الفحص: {e}")
 
-    product_divs = soup.find_all('div', class_='bg-gradient-to-br')
-
-    print(f"🧪 Found {len(product_divs)} items")
-
-    for div in product_divs:
-        name_div = div.find('div', class_='text-xs sm:text-sm font-semibold text-white/90 mb-1.5 truncate px-0.5')
-        if name_div:
-            plant_name = name_div.get_text(strip=True)
-            print(f"Checking: {plant_name}")
-
-            if target_plant.lower() in plant_name.lower():
-                if plant_name not in seen_plants:
-                    seen_plants.add(plant_name)
-                    bot.send_message(chat_id, f"🌱 The plant appeared: {plant_name}!\n{url}")
-                    print("🚀 Sent Telegram message!")
-
+# تشغيل الفحص كل دقيقة
 def run_checker():
     while True:
-        try:
-            check_website()
-        except Exception as e:
-            print("⚠️ Error:", e)
-        time.sleep(60)  # كل دقيقة
+        check_website()
+        time.sleep(10)
 
-@app.route('/')
+# صفحة رئيسية بسيطة
+@app.route("/")
 def home():
-    return "Bot is running ✔️"
+    return "Bot is running."
 
+# التشغيل
 if __name__ == '__main__':
-    threading.Thread(target=run_checker, daemon=True).start()
-    port = int(os.environ.get('PORT', 8080))
+    threading.Thread(target=run_checker).start()
+    port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
