@@ -9,7 +9,7 @@ services:
     startCommand: python main.py
     envVars:
       - key: BOT_TOKEN
-        value: "ضع_توكن_البوت_هنا"
+        value: "8338398375:AAEkYrjh8ynQkjRtNsXhHR9KSP9mEVw2-Tw"
       - key: CHAT_ID
-        value: "123456789"
+        value: "1639846336"
     plan: free
