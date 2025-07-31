@@ -1,59 +1,63 @@
+import os
 import time
 import threading
-import requests
-from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import telebot
 from flask import Flask
-import os
 
-# إعداد Flask
-app = Flask(__name__)
+# إعداد التوكن و الشات
+bot_token = os.getenv('BOT_TOKEN') or 'حط_التوكن_هون_لو_بدك'
+chat_id = int(os.getenv('CHAT_ID') or 123456789)
 
-# إعدادات البوت
-bot_token = os.getenv("BOT_TOKEN")  # ضع التوكن كمتغير بيئي في Render
-chat_id = int(os.getenv("CHAT_ID"))  # ضع رقم الشات كمتغير بيئي في Render
-bot = telebot.TeleBot(bot_token)
-
-# الكلمة المستهدفة
-TARGET = "strawberry"
-
-# لحفظ النباتات التي أُرسلت سابقاً
+# هدف البوت
+target_word = "strawberry".lower()
 seen_items = set()
 
-# رابط الموقع
-URL = "https://arcaiuz.com/grow-a-garden-stock"
+# تيليغرام
+bot = telebot.TeleBot(bot_token)
 
-# الدالة التي تفحص الموقع
+# إعدادات Selenium
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+
+driver = webdriver.Chrome(options=chrome_options)
+
+# وظيفة الفحص
 def check_website():
-    try:
-        headers = {"User-Agent": "Mozilla/5.0"}
-        response = requests.get(URL, headers=headers, timeout=10)
-        soup = BeautifulSoup(response.text, "html.parser")
-        items = soup.find_all("li", class_="bg-gray-900 p-3 rounded-md border border-gray-700 text-white font-medium flex items-center space-x-3")
+    url = 'https://arcaiuz.com/grow-a-garden-stock'
+    driver.get(url)
+    time.sleep(5)  # وقت تحميل جافاسكربت
 
-        for item in items:
-            span = item.find("span")
-            if span:
-                plant_name = span.get_text(strip=True).lower()
-                if TARGET in plant_name and plant_name not in seen_items:
-                    seen_items.add(plant_name)
-                    bot.send_message(chat_id, f"🌱 ظهرت النبتة: {plant_name.capitalize()}!\n{URL}")
-                    print(f"✅ تم إرسال: {plant_name}")
-    except Exception as e:
-        print(f"🚨 خطأ في الفحص: {e}")
+    items = driver.find_elements('css selector', 'li.bg-gray-900')
+    print(f"🚀 عدد العناصر: {len(items)}")
 
-# تشغيل الفحص كل دقيقة
+    for item in items:
+        text = item.text.lower()
+        print("📦 عنصر:", text)
+        if target_word in text and text not in seen_items:
+            seen_items.add(text)
+            bot.send_message(chat_id, f"🌱 ظهرت النبتة: {text}\n{url}")
+            print("✅ أُرسلت رسالة!")
+
+# تكرار الفحص كل 5 دقائق
 def run_checker():
     while True:
-        check_website()
+        try:
+            check_website()
+        except Exception as e:
+            print("❌ خطأ:", e)
         time.sleep(10)
 
-# صفحة رئيسية بسيطة
-@app.route("/")
-def home():
-    return "Bot is running."
+# Flask لعرض صفحة بسيطة
+app = Flask(__name__)
 
-# التشغيل
+@app.route('/')
+def home():
+    return "البوت شغال ✔️"
+
 if __name__ == '__main__':
     threading.Thread(target=run_checker).start()
     port = int(os.environ.get("PORT", 8080))
