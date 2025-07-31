@@ -21,7 +21,7 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.binary_location = "/usr/bin/google-chrome"  # مسار كروم على ريندر
+chrome_options.binary_location = "/usr/bin/google-chrome-stable"
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
