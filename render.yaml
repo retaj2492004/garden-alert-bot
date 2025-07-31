@@ -1,16 +1,15 @@
-# render.yaml
 services:
   - type: web
     name: garden-alert-bot
     env: python
-    buildCommand: |
-      apt-get update && \
-      apt-get install -y chromium-driver && \
-      pip install -r requirements.txt
+    buildScript: 
+      - apt-get update
+      - apt-get install -y chromium-driver
+      - pip install -r requirements.txt
     startCommand: python main.py
     envVars:
       - key: BOT_TOKEN
         value: "ضع_توكن_البوت_هنا"
       - key: CHAT_ID
-        value: "123456789"  # غيره إلى رقم الشات تبعك
+        value: "123456789"
     plan: free
