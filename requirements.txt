@@ -1,4 +1,4 @@
-flask
-telebot
 selenium
 webdriver-manager
+pyTelegramBotAPI
+flask
