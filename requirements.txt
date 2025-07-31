@@ -1,4 +1,4 @@
-selenium
-webdriver-manager
-pyTelegramBotAPI
 flask
+selenium
+webdriver_manager
+pyTelegramBotAPI
